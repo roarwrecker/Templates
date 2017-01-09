@@ -23,3 +23,4 @@ Please check the PowerShell help written for the Templates functions.
 
 ### License
 
+The PowerShell Templates Module is distributed under the [MIT license](https://github.com/roarwrecker/Templates/blob/master/LICENSE).
