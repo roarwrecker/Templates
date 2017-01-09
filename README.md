@@ -1,8 +1,7 @@
 # PowerShell Templates Module
+[![Build status](https://ci.appveyor.com/api/projects/status/a7j3xtney8s86kma?svg=true)](https://ci.appveyor.com/project/roarwrecker/templates)
 
 A PowerShell templates module using Plaster (https://github.com/PowerShell/Plaster) to generate projects and files based on XML templates.
-
-### Current build status
 
 ### Dependencies
 
