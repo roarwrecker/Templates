@@ -51,7 +51,9 @@ PowerShellVersion = '3.0'
 # ProcessorArchitecture = ''
 
 # Modules that must be imported into the global environment prior to importing this module
-# RequiredModules = @()
+RequiredModules = @(
+    { ModuleName = 'Plaster'; ModuleVersion = '1.0.1'; GUID = 'cfce3c5e-402f-412a-a83a-7b7ee9832ff4' }
+)
 
 # Assemblies that must be loaded prior to importing this module
 # RequiredAssemblies = @()
