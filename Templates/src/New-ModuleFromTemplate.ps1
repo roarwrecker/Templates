@@ -90,6 +90,7 @@ function New-ModuleFromTemplate
     )
 
     # Set all mandatory parameters
+    $PlasterParameters = @{
         TemplatePath = "${PSScriptRoot}\NewModuleTemplate\"
         DestinationPath = $DestinationPath
         ModuleName = $ModuleName
@@ -109,9 +110,12 @@ function New-ModuleFromTemplate
     $nonMandatoryParmeters.Keys | ForEach-Object {
         $value = $nonMandatoryParmeters[$_]
         if ($value.Passed) {
+            $PlasterParameters.Add($_, $value.Passed)
         }
         elseif ($NoPrompt) {
+            $PlasterParameters.Add($_, $value.Default)
         }
     }
 
+    Invoke-Plaster @PlasterParameters -Force -NoLogo
 }
