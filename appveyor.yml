@@ -1,6 +1,6 @@
 install:
-  - Install-Module Pester
-  - Install-Module testing
+  - ps: Install-Module Pester
+  - ps: Install-Module testing
 
 version: '{build}'
 build: false
