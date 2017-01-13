@@ -1,6 +1,7 @@
 install:
   - ps: Install-Module Pester
   - ps: Install-Module testing
+  - ps: Install-Module Plaster
 
 version: '{build}'
 build: false
