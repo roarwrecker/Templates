@@ -1,6 +1,6 @@
 install:
-  # Install pester via chocolatey
-  - cinst pester
+  - ps: Install-Module Pester
+  - ps: Install-Module testing
 
 version: '{build}'
 build: false
