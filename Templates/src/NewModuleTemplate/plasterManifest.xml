@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<plasterManifest
+  schemaVersion="1.0" xmlns="http://www.microsoft.com/schemas/PowerShell/Plaster/v1">
+  <metadata>
+    <name>NewModule</name>
+    <id>9be631bc-e178-4c69-9153-a2488cecaab7</id>
+    <version>0.1.0</version>
+    <title>New PowerShell Module</title>
+    <description></description>
+    <author>Helmut Rohregger</author>
+    <tags>PowerShell, Module, Manifest, Pester, Helmut, Rohregger, roarwrecker</tags>
+  </metadata>
+
+
+  <parameters>
+
+    <parameter name='Author' type='text'
+      prompt='Enter your name (Author)'
+    />
+    <parameter name='ModuleName' type='text'
+      prompt='Enter the name of the module'
+    />
+    <parameter name='Version'
+      type='text'
+      default='0.1.0'
+      prompt='Enter the version number for the module'
+    />
+    <parameter name='Description'
+      type='text'
+      prompt='Enter a short description for the module'
+    />
+    <parameter name='Company'
+      type='text'
+      default='Unknown'
+      prompt='Enter the name of your company'
+    />
+    <parameter name='PowerShellVersion'
+      type='text'
+      default='None'
+      prompt='Enter the minimum required PowerShell version. No version will be specified if empty'
+    />
+
+  </parameters>
+  
+  
+  <content>
+    
+    <file source=".gitignore" destination=".gitignore" />
+    <file source="appveyor.yml" destination="appveyor.yml" />
+    <file source="LICENSE" destination="LICENSE"/>
+    <file source="README.md" destination="README.md"/>
+    <file source="_moduleName\_manifest.psm1"
+      destination="${PLASTER_PARAM_ModuleName}\${PLASTER_PARAM_ModuleName}.psm1"
+    />
+    <file source="" destination="${PLASTER_PARAM_ModuleName}\src"/>
+    <file source="" destination="${PLASTER_PARAM_ModuleName}\tests"/>
+    
+    <templateFile source="LICENSE" destination="LICENSE"/>
+    <templateFile source="README.md" destination="README.md"/>
+
+    <modify path="README.md">
+      <replace condition="$PLASTER_PARAM_PowerShellVersion -eq 'None'">
+        <original>%%PowerShellVersionIfSpecified%%</original>
+        <substitute></substitute>
+      </replace>
+      <replace condition="$PLASTER_PARAM_PowerShellVersion -ne 'None'">
+        <original>%%PowerShellVersionIfSpecified%%</original>
+        <substitute expand='true'>- Required minimum PowerShell version: $PLASTER_PARAM_PowerShellVersion</substitute>
+      </replace>      
+    </modify>
+
+
+    <newModuleManifest destination='${PLASTER_PARAM_ModuleName}\${PLASTER_PARAM_ModuleName}.psd1'
+      moduleVersion='$PLASTER_PARAM_Version'
+      rootModule='${PLASTER_PARAM_ModuleName}.psm1'
+      author='$PLASTER_PARAM_Author'
+      description='$PLASTER_PARAM_Description'
+      encoding='UTF8'
+    />
+
+    <modify path="${PLASTER_PARAM_ModuleName}\${PLASTER_PARAM_ModuleName}.psd1">
+      <replace>
+        <original>CompanyName = 'Unknown'</original>
+        <substitute expand='true'>CompanyName = '$PLASTER_PARAM_Company'</substitute>
+      </replace>
+      <replace condition="$PLASTER_PARAM_PowerShellVersion -ne 'None'">
+        <original># PowerShellVersion = ''</original>
+        <substitute expand='true'>PowerShellVersion = '$PLASTER_PARAM_PowerShellVersion'</substitute>
+      </replace>      
+    </modify>
+
+
+    <message>
+
+Your new PowerShell module project '$PLASTER_PARAM_ModuleName' has been created.
+
+    </message>
+
+
+  </content>
+
+</plasterManifest>

@@ -52,7 +52,7 @@ PowerShellVersion = '3.0'
 
 # Modules that must be imported into the global environment prior to importing this module
 RequiredModules = @(
-    { ModuleName = 'Plaster'; ModuleVersion = '1.0.1'; GUID = 'cfce3c5e-402f-412a-a83a-7b7ee9832ff4' }
+    @{ ModuleName = 'Plaster'; ModuleVersion = '1.0.1'; GUID = 'cfce3c5e-402f-412a-a83a-7b7ee9832ff4' }
 )
 
 # Assemblies that must be loaded prior to importing this module
@@ -71,7 +71,9 @@ RequiredModules = @(
 # NestedModules = @()
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = '*'
+FunctionsToExport = @(
+    'New-ModuleFromTemplate'
+)
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = '*'
