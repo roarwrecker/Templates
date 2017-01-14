@@ -89,33 +89,67 @@ function New-ModuleFromTemplate
         $NoPrompt
     )
 
-    # Set all mandatory parameters
-    $PlasterParameters = @{
+    # Adds all passed mandatory parameters to the parameter hashtable
+    $PlasterParameters = Add-MandatoryParameters @{
         TemplatePath = "${PSScriptRoot}\NewModuleTemplate\"
-        DestinationPath = $DestinationPath
-        ModuleName = $ModuleName
-        Description = $Description
     }
 
-    # Temporarily save the passed values and the default values for every non mandatory parameter
-    $nonMandatoryParmeters = @{
+    # Create links for non mandatory parameters and default values to Invoke-Plaster parameter names
+    # which will then be used for decision making based on the NoPrompt parameter and passed values
+    $PlasterParameters = Add-NonMandatoryParameters $PlasterParameters $NoPrompt.IsPresent @{
         Author = @{ Passed = $Author; Default = 'Unknown' }
         Version = @{ Passed = $Version; Default = '0.1.0' }
         Company = @{ Passed = $Company; Default = 'Unknown' }
         PowerShellVersion = @{ Passed = $PowerShellVersion; Default = 'None' }
     }
 
-    # Add key/value pair with passed value, with the default value or without the key/value pair 
-    # dependent if the parameter and the NoPrompt switch have been specified.
-    $nonMandatoryParmeters.Keys | ForEach-Object {
-        $value = $nonMandatoryParmeters[$_]
+    Invoke-Plaster @PlasterParameters -Force -NoLogo
+}
+
+function Add-MandatoryParameters ([Hashtable] $Parameters) {
+
+    $callerInvocationInfo = (Get-PSCallStack)[1].InvocationInfo
+    $boundedParametersFromCaller = $callerInvocationInfo.BoundParameters
+    $parametersFromCallingFunction = $callerInvocationInfo.MyCommand.Parameters 
+
+    # Add ParameterName/ParameterValue pairs for all mandatory parameters to hashtable
+    $parametersFromCallingFunction.Keys `
+        | Where-Object { Test-MandatoryParameter $parametersFromCallingFunction[$_] } `
+        | Foreach-Object { 
+            $Parameters.Add($_, $boundedParametersFromCaller[$_]) 
+        }
+    
+    Write-Output $Parameters
+}
+
+function Test-MandatoryParameter (
+    [System.Management.Automation.ParameterMetadata] $metadata) {
+
+    $metadata.Attributes | Where-Object {
+        ($_.GetType() -eq [System.Management.Automation.ParameterAttribute])
+    } | Select-Object -ExpandProperty Mandatory
+}
+
+<# 
+    Add key/value pair with passed value, with the default value or without the key/value pair 
+    dependent if the parameter and the NoPrompt switch have been specified.
+#>
+function Add-NonMandatoryParameters (
+    [Hashtable] $Parameters,
+    [bool] $NoPrompt,
+    [Hashtable] $NonMandatoryParameters) {
+ 
+    $NonMandatoryParameters.Keys | ForEach-Object {
+        
+        $value = $NonMandatoryParameters[$_]
+        
         if ($value.Passed) {
-            $PlasterParameters.Add($_, $value.Passed)
+            $Parameters.Add($_, $value.Passed)
         }
         elseif ($NoPrompt) {
-            $PlasterParameters.Add($_, $value.Default)
+            $Parameters.Add($_, $value.Default)
         }
     }
 
-    Invoke-Plaster @PlasterParameters -Force -NoLogo
+    Write-Output $Parameters
 }
