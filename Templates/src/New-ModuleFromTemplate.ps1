@@ -90,7 +90,7 @@ function New-ModuleFromTemplate
     )
 
     # Adds all passed mandatory parameters to the parameter hashtable
-    $PlasterParameters = Add-MandatoryParameters @{
+    $PlasterParameters = Add-MandatoryParameters $MyInvocation @{
         TemplatePath = "${PSScriptRoot}\NewModuleTemplate\"
     }
 
@@ -106,11 +106,12 @@ function New-ModuleFromTemplate
     Invoke-Plaster @PlasterParameters -Force -NoLogo
 }
 
-function Add-MandatoryParameters ([Hashtable] $Parameters) {
+function Add-MandatoryParameters (
+    [System.Management.Automation.InvocationInfo] $InvocationInfo,
+    [Hashtable] $Parameters) {
 
-    $callerInvocationInfo = (Get-PSCallStack)[1].InvocationInfo
-    $boundedParametersFromCaller = $callerInvocationInfo.BoundParameters
-    $parametersFromCallingFunction = $callerInvocationInfo.MyCommand.Parameters 
+    $boundedParametersFromCaller = $InvocationInfo.BoundParameters
+    $parametersFromCallingFunction = $InvocationInfo.MyCommand.Parameters 
 
     # Add ParameterName/ParameterValue pairs for all mandatory parameters to hashtable
     $parametersFromCallingFunction.Keys `
@@ -125,9 +126,11 @@ function Add-MandatoryParameters ([Hashtable] $Parameters) {
 function Test-MandatoryParameter (
     [System.Management.Automation.ParameterMetadata] $metadata) {
 
-    $metadata.Attributes | Where-Object {
-        ($_.GetType() -eq [System.Management.Automation.ParameterAttribute])
-    } | Select-Object -ExpandProperty Mandatory
+    $metadata.Attributes `
+        | Where-Object {
+            ($_.GetType() -eq [System.Management.Automation.ParameterAttribute])
+        } `
+        | Select-Object -ExpandProperty Mandatory -First 1
 }
 
 <# 
