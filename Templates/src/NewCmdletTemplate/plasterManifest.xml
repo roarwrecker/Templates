@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<plasterManifest
+  schemaVersion="1.0" xmlns="http://www.microsoft.com/schemas/PowerShell/Plaster/v1">
+  <metadata>
+    <name>NewCmdlet</name>
+    <id>0214b00f-dd68-41f3-80b9-96ba6f043d9a</id>
+    <version>0.1.0</version>
+    <title>New PowerShell Cmdlet</title>
+    <description></description>
+    <author>Helmut Rohregger</author>
+    <tags>PowerShell, Cmdlet, Template, Helmut, Rohregger, roarwrecker</tags>
+  </metadata>
+
+  <parameters>
+
+    <parameter name='ModuleName' type='text'
+      prompt='Enter the name of the PowerShell module where the new Cmdlet will be inserted to'
+    />
+    <parameter name='CmdletName' type='text'
+      prompt='Enter the name for your new PowerShell Cmdlet'
+    />
+    <parameter name='SourcesPath' type='text'
+      default='src'
+      prompt='Enter the path to your *.ps1 sources folder'
+    />
+    <parameter name='TestsPath' type='text'
+      default='tests'
+      prompt='Enter the path to your Pester tests folder'
+    />
+    <parameter name='ImportModuleArguments' type='text'
+      default='-Parent'
+      prompt='Specify the Import-ModuleFromPath arguments which will be added to the Pester test file'
+    />
+
+  </parameters>
+
+
+  <content>
+
+    <templateFile source="_CmdletTemplate.ps1" 
+      destination="${PLASTER_PARAM_SourcesPath}\${PLASTER_PARAM_CmdletName}.ps1"
+    />
+    <templateFile source="_CmdletTestsTemplate.ps1"
+      destination="${PLASTER_PARAM_TestsPath}\${PLASTER_PARAM_CmdletName}.Tests.ps1"
+    />
+
+
+    <message>
+
+Your new PowerShell Cmdlet '$PLASTER_PARAM_CmdletName' has been added to your '$PLASTER_PARAM_ModuleName' PowerShell module.
+Update your '${PLASTER_PARAM_ModuleName}.psd1' file if the new '$PLASTER_PARAM_CmdletName' Cmdlet should be available when importing the module.
+
+    </message>
+
+  </content>
+</plasterManifest>
