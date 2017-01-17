@@ -30,5 +30,8 @@ function New-CmdletFromTemplate {
         ImportModuleArguments = '-Parent'
     }
 
+    # todo: check if destination path is location of module. Otherwise the ModuleName determination will not work
+    # todo: check if src and tests folder exist. If not, the user might want to specify another location for the ps1 files.
+
     Invoke-Plaster @PlasterParameters -NoLogo -Force
 }
