@@ -13,6 +13,41 @@ Describe "'$sut' tests with mandatory parameters only" {
     & $sut -DestinationPath $destination -ModuleName $moduleName -Description $description -NoPrompt
 
     $itemsWhichShouldExist = @(
+        @{ path = "${destination}\$moduleName" }
+        @{ path = "${destination}\${moduleName}\${moduleName}.psd1" }
+        @{ path = "${destination}\${moduleName}\${moduleName}.psm1" }
+        @{ path = "${destination}\${moduleName}\src" }
+        @{ path = "${destination}\${moduleName}\tests" }
+    )
+
+    $itemsWhichShouldNotExist = @(
+        @{ path = "${destination}\.gitignore" }
+        @{ path = "${destination}\appveyor.yml" }
+        @{ path = "${destination}\LICENSE" }
+        @{ path = "${destination}\README.md" }
+    )
+
+    It "should create item '<path>'" -TestCases $itemsWhichShouldExist {
+        Param ($path)
+
+        $path | Should exist
+    }
+
+    It "should not create item '<path>'" -TestCases $itemsWhichShouldNotExist {
+        Param ($path)
+
+        $path | Should not exist
+    }
+}
+
+Describe "'$sut' tests with mandatory parameters only and GitHub parameter specified" {
+
+    $destination = "${TestDrive}\mymodule"
+    $moduleName = "mymodule"
+    $description = 'My description'
+    & $sut -DestinationPath $destination -ModuleName $moduleName -Description $description -NoPrompt -GitHub
+
+    $itemsWhichShouldExist = @(
         @{ path = "${destination}\.gitignore" }
         @{ path = "${destination}\appveyor.yml" }
         @{ path = "${destination}\LICENSE" }
@@ -27,7 +62,7 @@ Describe "'$sut' tests with mandatory parameters only" {
     It "should create item '<path>'" -TestCases $itemsWhichShouldExist {
         Param ($path)
 
-        Get-Item -Path $path | Should exist
+        $path | Should exist
     }
 }
 

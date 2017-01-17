@@ -39,26 +39,43 @@
       default='None'
       prompt='Enter the minimum required PowerShell version. No version will be specified if empty'
     />
+    <parameter name='ProjectType' type='choice' default='1' store='text' 
+      prompt='Specify the project type you want to put your PowerShell module in'
+    >
+      <choice label='&amp;GitHub'
+              help="Creates a GitHub project for you PowerShell module"
+              value="GitHub"/>
+      <choice label='&amp;None'
+              help="No project; just a PowerShell module."
+              value="None"/>
+    </parameter>
 
   </parameters>
   
   
   <content>
     
-    <file source=".gitignore" destination=".gitignore" />
-    <file source="appveyor.yml" destination="appveyor.yml" />
-    <file source="LICENSE" destination="LICENSE"/>
-    <file source="README.md" destination="README.md"/>
+    <file source=".gitignore" destination=".gitignore" 
+      condition="$PLASTER_PARAM_ProjectType -eq 'GitHub'"
+    />
+    <file source="appveyor.yml" destination="appveyor.yml"  
+      condition="$PLASTER_PARAM_ProjectType -eq 'GitHub'"
+    />
     <file source="_moduleName\_manifest.psm1"
       destination="${PLASTER_PARAM_ModuleName}\${PLASTER_PARAM_ModuleName}.psm1"
     />
+    <templateFile source="LICENSE" destination="LICENSE"  
+      condition="$PLASTER_PARAM_ProjectType -eq 'GitHub'"
+    />
+    <templateFile source="README.md" destination="README.md"  
+      condition="$PLASTER_PARAM_ProjectType -eq 'GitHub'"
+    />
+
     <file source="" destination="${PLASTER_PARAM_ModuleName}\src"/>
     <file source="" destination="${PLASTER_PARAM_ModuleName}\tests"/>
     
-    <templateFile source="LICENSE" destination="LICENSE"/>
-    <templateFile source="README.md" destination="README.md"/>
-
-    <modify path="README.md">
+    <modify path="README.md"
+      condition="$PLASTER_PARAM_ProjectType -eq 'GitHub'">
       <replace condition="$PLASTER_PARAM_PowerShellVersion -eq 'None'">
         <original>%%PowerShellVersionIfSpecified%%</original>
         <substitute></substitute>
