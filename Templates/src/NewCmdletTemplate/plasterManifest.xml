@@ -37,10 +37,10 @@
 
   <content>
 
-    <templateFile source="_CmdletTemplate.ps1" 
+    <templateFile source="_CmdletTemplate_ps1" 
       destination="${PLASTER_PARAM_SourcesPath}\${PLASTER_PARAM_CmdletName}.ps1"
     />
-    <templateFile source="_CmdletTestsTemplate.ps1"
+    <templateFile source="_CmdletTestsTemplate_ps1"
       destination="${PLASTER_PARAM_TestsPath}\${PLASTER_PARAM_CmdletName}.Tests.ps1"
     />
 
