@@ -68,10 +68,6 @@ Describe "'$sut' tests with mandatory parameters only and GitHub parameter speci
 
 Describe "'$sut' tests with invalid parameters" {
 
-    $destination = "${TestDrive}\mymodule"
-    $moduleName = "mymodule"
-    $description = "My description"
-
     $errorThrowingArguments = @(
         @{  arguments = @{ DestinationPath='' } + (Get-ValidModuleName)
             expectedErrorContent = 'DestinationPath'
