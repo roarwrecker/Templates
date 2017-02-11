@@ -12,7 +12,7 @@
 RootModule = 'Templates.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.2.0'
+ModuleVersion = '0.2.1'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -110,6 +110,17 @@ PrivateData = @{
         # A URL to the main website for this project.
         ProjectUri = 'https://github.com/roarwrecker/Templates'
 
+        Extensions = @(
+            @{
+                Module = "Plaster"
+                Details = @{
+                    TemplatePaths = @(
+                        "src/NewCmdletTemplate", 
+                        "src/NewModuleTemplate"
+                    )
+                }
+            }
+        )
         # A URL to an icon representing this module.
         # IconUri = ''
 
