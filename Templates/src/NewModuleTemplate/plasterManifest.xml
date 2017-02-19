@@ -55,7 +55,7 @@
   
   <content>
     
-    <file source=".gitignore" destination=".gitignore" 
+    <file source="_gitignore" destination=".gitignore" 
       condition="$PLASTER_PARAM_ProjectType -eq 'GitHub'"
     />
     <file source="appveyor.yml" destination="appveyor.yml"  
@@ -67,7 +67,7 @@
     <templateFile source="LICENSE" destination="LICENSE"  
       condition="$PLASTER_PARAM_ProjectType -eq 'GitHub'"
     />
-    <templateFile source="README.md" destination="README.md"  
+    <templateFile source="_README.md_" destination="README.md"  
       condition="$PLASTER_PARAM_ProjectType -eq 'GitHub'"
     />
 
